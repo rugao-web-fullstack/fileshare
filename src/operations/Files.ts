@@ -1,11 +1,11 @@
 import * as Express from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
-
-export class Files {
-  private req:any;
-  private res:any;
-  constructor(req,res) {
+import { promisify } from 'util';
+export class File {
+  private req: any;
+  private res: any;
+  constructor(req: any, res: any) {
     this.req = req;
     this.res = res;
   }
@@ -14,27 +14,22 @@ export class Files {
     const currDir = path.normalize(req.query.dir);
     const fileName = req.query.name;
     const currFile = path.join(currDir, fileName);
-    let fReadStream;
+    const fsexists = promisify(fs.exists);
 
-    fs.exists(currFile, (exist: any) => {
+    fsexists(currFile).then((exist: any) => {
       if (exist) {
-        res.set({
-          'Content-Disposition': 'attachment;filename=' + encodeURI(fileName),
-          'Content-type': 'application/octet-stream',
+        const f = fs.createReadStream(currFile);
+        this.res.writeHead(200, {
+          'Content-Disposition': 'attachment; filename=' + encodeURI(fileName),
+          'Content-Type': 'application/force-download',
         });
-        fReadStream = fs.createReadStream(currFile);
-        fReadStream.on('data', (chunk) => {
-          // console.log(chunk);
-          res.write(chunk, 'binary');
-        });
-        fReadStream.on('end', () => {
-          res.end();
-        });
+        f.pipe(res);
       } else {
         res.set('Content-type', 'text/html');
-        res.send('file not exist!');  
+        res.send('file not exist!');
         res.end();
       }
     });
   }
+
 }
