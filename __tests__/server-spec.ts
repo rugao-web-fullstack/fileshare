@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import * as assert from 'assert';
 
 const app = Express();
-const server = new Server(app,3000);
+const server = new Server(app, 3000);
 
 test('Should greet with message', () => {
   const express1 = Express();
@@ -20,21 +20,30 @@ test('Should greet with message', () => {
 
 test('测试访问用户页面success', (done) => {
   request(app)
-  .get('/user/5555')
-  .expect(200, function (err, res) {
-    expect(err).toBeFalsy();
-    expect((res.text).includes('-用户文件管理')).toBeTruthy();
-    done();
-  });
+    .get('/user/5555')
+    .expect(200, function (err, res) {
+      expect(err).toBeFalsy();
+      expect((res.text).includes('-用户文件管理')).toBeTruthy();
+      done();
+    });
 });
 test('测试访问用户页面fail', (done) => {
   request(app)
-  .get('/user/qqq')
-  .expect(200, function (err, res) {
-    expect(err).toBeFalsy();
-    expect((res.text).includes('404')).toBeTruthy();
-    done();
-  });
+    .get('/user/qqq')
+    .expect(200, function (err, res) {
+      expect(err).toBeFalsy();
+      expect((res.text).includes('404')).toBeTruthy();
+      done();
+    });
+});
+test('测试管理员登录success', (done) => {
+  request(app)
+    .get('/admin/login')
+    .expect(200, function (err, res) {
+      expect(err).toBeFalsy();
+      expect((res.text).includes('-管理员登录')).toBeTruthy();
+      done();
+    });
 });
 test('url-register', (done) => {
   request(app)
@@ -48,19 +57,19 @@ test('url-register', (done) => {
 
 test('测试访问用户管理页面', (done) => {
   request(app)
-  .get('/admin/users')
-  .expect(200, function (err, res) {
-    expect(err).toBeFalsy();
-    expect((res.text).includes('支持模糊搜索')).toBeTruthy();
-    done();
-  })
+    .get('/admin/users')
+    .expect(200, function (err, res) {
+      expect(err).toBeFalsy();
+      expect((res.text).includes('支持模糊搜索')).toBeTruthy();
+      done();
+    });
 });
 test('测试访问文件分类页面', (done) => {
   request(app)
-  .get('/admin/file/category')
-  .expect(200, function (err, res) {
-    expect(err).toBeFalsy();
-    expect((res.text).includes('-后台内容')).toBeTruthy();
-    done();
-  })
+    .get('/admin/file/category')
+    .expect(200, function (err, res) {
+      expect(err).toBeFalsy();
+      expect((res.text).includes('-后台内容')).toBeTruthy();
+      done();
+    })
 });
