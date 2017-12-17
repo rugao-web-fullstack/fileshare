@@ -33,6 +33,6 @@ export class Server {
     app.use('/admin', admin);
     app.use('/api/admin', api_admin);
     app.use('/', hots);
-    app.use('/hots:1', hots);
+    app.use('/hots', hots);
   }
 }

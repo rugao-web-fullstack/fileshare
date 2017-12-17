@@ -146,10 +146,10 @@ test('首页url测试', (done) => {
 });
 test('热门文件url测试', (done) => {
   request(app)
-  .get('/hots:1')
+  .get('/hots/1')
   .expect(200, function (err, res) {
     expect(err).toBeFalsy();
-    expect((res.text).includes('hots:1')).toBeTruthy();
+    expect((res.text).includes('hot1')).toBeTruthy();
     done();
   });
 });
