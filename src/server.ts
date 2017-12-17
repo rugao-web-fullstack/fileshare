@@ -2,6 +2,7 @@ import * as Express from 'express';
 import * as nunjucks from 'nunjucks';
 import * as path from 'path';
 import api_admin from './routes/api/admin';
+import hots from './routes/hot';
 import admin from './routes/url/admin';
 import user from './routes/url/user';
 export class Server {
@@ -31,5 +32,7 @@ export class Server {
     app.use('/user', user);
     app.use('/admin', admin);
     app.use('/api/admin', api_admin);
+    app.use('/', hots);
+    app.use('/hots:1', hots);
   }
 }
