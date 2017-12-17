@@ -38,12 +38,40 @@ test('测试访问用户页面fail', (done) => {
       done();
     });
 });
+test('测试管理员登录success', (done) => {
+  request(app)
+    .get('/admin/login')
+    .expect(200, function (err, res) {
+      expect(err).toBeFalsy();
+      expect((res.text).includes('-管理员登录')).toBeTruthy();
+      done();
+    });
+});
+test('测试管理员 password modify', (done) => {
+  request(app)
+    .get('/admin/update')
+    .expect(200, function (err, res) {
+      expect(err).toBeFalsy();
+      expect((res.text).includes('管理员个人设置')).toBeTruthy();
+      done();
+    });
+});
 test('url-register', (done) => {
   request(app)
     .get('/user/register')
     .expect(200, function (err, res) {
       expect(err).toBeFalsy();
       expect((res.text).includes('注册')).toBeTruthy();
+      done();
+    });
+});
+test('url-login', (done) => {
+  request(app)
+    .get('/user/login')
+    .expect(200, function (err, res) {
+      console.log(err);
+      expect(err).toBeFalsy();
+      expect((res.text).includes('登录')).toBeTruthy();
       done();
     });
 });
@@ -81,6 +109,8 @@ test('测试数据库创建', (done) => {
     con.end();
     done();
   });
+
+
 });
 
 
@@ -113,6 +143,18 @@ test('测试用户所有获取', (done) => {
       expect(res.body[0].username === 'user1').toBeTruthy();
       done();
     })
+});
+
+test('测试用户删除', (done) => {
+  request(app)
+    .post('/api/admin/users')
+    .type('form')
+    .send({ action: 'delete', id: 1 })
+    .expect(200, function (err, res) {
+      expect(err).toBeFalsy();
+      expect(res.body === 'ok').toBeTruthy();
+      done();
+    });
 });
 
 test('cb错误测试覆盖', (done) => {
