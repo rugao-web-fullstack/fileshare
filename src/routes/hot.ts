@@ -5,7 +5,7 @@ router.get('/',  (req:any, res:any) => {
   res.render('index');
 });
 
-router.get('/1', (req:any, res:any) => {
+router.get('/video', (req:any, res:any) => {
   res.render('show');
 });
 
