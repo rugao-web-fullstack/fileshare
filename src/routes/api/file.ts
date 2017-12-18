@@ -17,4 +17,3 @@ router.post('/', upload, (req: any, res: any) => {
 });
 
 export default router;
-
