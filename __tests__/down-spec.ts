@@ -1,9 +1,25 @@
 import { Server } from '../src/server';
-import * as Express from "express";
+import * as Express from 'express';
 import * as request from 'supertest';
 import * as mysql from 'mysql';
 import cbFunc from '../src/cb/cb';
-test('测试download----success', (done) => {
+
+test('测试数据库创建', done => {
+  var con = mysql.createConnection({
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USERNAME,
+    password: process.env.MYSQL_PASSWORD,
+  });
+
+  con.query('CREATE DATABASE cloud', function(err) {
+    expect(err).toBeFalsy();
+    // 断开
+    con.end();
+    done();
+  });
+});
+
+test('测试download----success', done => {
   let app = Express();
   let server = new Server(app, 3000);
   var con = mysql.createConnection({
@@ -30,22 +46,22 @@ test('测试download----success', (done) => {
     }
   );
   const sql = 'select * from file;';
-  con.query(sql, cbFunc((result: any) => {
-    con.end();
-  }));
+  con.query(
+    sql,
+    cbFunc((result: any) => {
+      con.end();
+    })
+  );
   request(app)
     .get('/user/download?id=1')
-    .expect(200, function (err, res) {
+    .expect(200, function(err, res) {
       if (err) throw err;
-      expect((res.text) != 0).toBeTruthy();
+      expect(res.text != 0).toBeTruthy();
       done();
     });
 });
 
-
-
-
-test('测试download----fail', (done) => {
+test('测试download----fail', done => {
   let app = Express();
   let server = new Server(app, 3000);
   var con = mysql.createConnection({
@@ -71,14 +87,17 @@ test('测试download----fail', (done) => {
     }
   );
   const sql = 'select * from file;';
-  con.query(sql, cbFunc((result: any) => {
-    con.end();
-  }));
+  con.query(
+    sql,
+    cbFunc((result: any) => {
+      con.end();
+    })
+  );
   request(app)
     .get('/user/download?id=2')
-    .expect(200, function (err, res) {
+    .expect(200, function(err, res) {
       if (err) throw err;
-      expect((res.text).includes("not")).toBeTruthy();
+      expect(res.text.includes('not')).toBeTruthy();
       done();
     });
 });
@@ -88,5 +107,3 @@ test('cb错误测试覆盖', done => {
   expect(func(new Error('222'), '0') === undefined).toBeTruthy();
   done();
 });
-
-
