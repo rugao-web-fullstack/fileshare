@@ -4,6 +4,20 @@ import * as request from 'supertest';
 import * as mysql from 'mysql';
 import cbFunc from '../src/cb/cb';
 
+test('测试数据库创建', done => {
+  var con = mysql.createConnection({
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USERNAME,
+    password: process.env.MYSQL_PASSWORD,
+  });
+
+  con.query('CREATE DATABASE cloud', function(err) {
+    expect(err).toBeFalsy();
+    // 断开
+    con.end();
+    done();
+  });
+});
 
 test('测试download----success', done => {
   let app = Express();
@@ -92,4 +106,18 @@ test('cb错误测试覆盖', done => {
   let func = cbFunc(() => {});
   expect(func(new Error('222'), '0') === undefined).toBeTruthy();
   done();
+});
+
+beforeAll(function(done) {
+  var con = mysql.createConnection({
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USERNAME,
+    password: process.env.MYSQL_PASSWORD,
+  });
+  con.query('DROP DATABASE IF EXISTS cloud;', function(err) {
+    expect(err).toBeFalsy();
+    // 断开
+    con.end();
+    done();
+  });
 });
