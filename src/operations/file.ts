@@ -51,4 +51,12 @@ export class File {
     await this.insert(type, file.size);
     res.json('上传成功');
   }
+
+  public async getFiles(req: any, res: any) {
+    const con = await db('cloud');
+    const sql = 'select * from file where type = \'' + req.query.type + '\';';
+    const result = await query(sql, con);
+    console.log(result);
+    res.json(result);
+  }
 }

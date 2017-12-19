@@ -320,6 +320,44 @@ test('测试.md文件上传成功', done => {
     });
 });
 
+
+test('创建文件表', done => {
+  var con = mysql.createConnection({
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USERNAME,
+    password: process.env.MYSQL_PASSWORD,
+    database: 'cloud',
+  });
+  // 创建file表格
+  con.query(
+    'create table file (id int auto_increment,filename varchar(255) not null,type varchar(20)not null,size int not null,downloads int NOT NULL,hash varchar(64) not null,primary key(id));',
+    function(err) {
+      expect(err).toBeFalsy();
+      console.log('success file');
+      const sql =
+        "INSERT INTO file(filename,type,size, downloads, hash) VALUES ('111','zip','111','111','111')";
+      //插入一些数据
+      con.query(sql, function(err) {
+        expect(err).toBeFalsy();
+        console.log('success file');
+        con.end();
+        done();
+      });
+    }
+  );
+});
+
+test('测试获取分类文件', done => {
+  request(app)
+    .get('/api/files?type=zip')
+    .expect(200, function(err, res) {
+      expect(err).toBeFalsy();
+      expect(res.body).toBeTruthy();
+      done();
+    });
+});
+
+
 beforeAll(function(done) {
   var con = mysql.createConnection({
     host: process.env.MYSQL_HOST,
