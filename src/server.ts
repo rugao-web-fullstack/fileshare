@@ -6,6 +6,8 @@ import api_admin from './routes/api/admin';
 import file from './routes/api/file';
 import users from './routes/api/users';
 import admin from './routes/url/admin';
+import hots from './routes/url/hots';
+import main from './routes/url/main';
 import user from './routes/url/user';
 export class Server {
   private _server: Express;
@@ -42,5 +44,8 @@ export class Server {
     app.use('/api/admin', api_admin);
     app.use('/api/files', file);
     app.use('/api/users', users);
+    app.use('/', main);
+    app.use('/hots', hots);
+    app.use('/api/hot', hot);
   }
 }
