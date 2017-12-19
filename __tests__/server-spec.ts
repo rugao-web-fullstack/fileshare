@@ -36,6 +36,33 @@ test('热门文件url测试', done => {
       done();
     });
 });
+test('热门音频url测试', done => {
+  request(app)
+    .get('/hots/audio')
+    .expect(200, function(err, res) {
+      expect(err).toBeFalsy();
+      expect(res.text.includes('video')).toBeTruthy();
+      done();
+    });
+});
+test('热门图片url测试', done => {
+  request(app)
+    .get('/hots/image')
+    .expect(200, function(err, res) {
+      expect(err).toBeFalsy();
+      expect(res.text.includes('video')).toBeTruthy();
+      done();
+    });
+});
+test('热门文章url测试', done => {
+  request(app)
+    .get('/hots/article')
+    .expect(200, function(err, res) {
+      expect(err).toBeFalsy();
+      expect(res.text.includes('video')).toBeTruthy();
+      done();
+    });
+});
 test('测试访问用户页面success', done => {
   request(app)
     .get('/user/5555')
