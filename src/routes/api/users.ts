@@ -9,8 +9,13 @@ router.post('/', async (req: any, res: any) => {
       const user = new User(req, res);
       await user.register(req, res);
       break;
+    case 'login':
+      const loGin = new User(req, res);
+      await loGin.login(req, res);
+      break;
     default:
       res.send('error');
   }
 });
+
 export default router;

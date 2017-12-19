@@ -2,6 +2,7 @@ import * as bodyParser from 'body-parser';
 import * as Express from 'express';
 import * as nunjucks from 'nunjucks';
 import * as path from 'path';
+import * as session from 'express-session';
 import api_admin from './routes/api/admin';
 import files from './routes/api/file';
 import hot from './routes/api/hot';
@@ -10,6 +11,8 @@ import admin from './routes/url/admin';
 import hots from './routes/url/hots';
 import main from './routes/url/main';
 import user from './routes/url/user';
+
+
 export class Server {
   private _server: Express;
   private _port: number;
@@ -38,6 +41,10 @@ export class Server {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(Express.static(path.join(__dirname, 'public')));
+    
+    app.use(session({
+      secret: 'sosos'
+    }));
   }
   public initRouters(app: Express) {
     app.use('/user', user);
