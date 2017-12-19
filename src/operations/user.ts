@@ -1,7 +1,10 @@
 import * as crypto from 'crypto';
 import * as moment from 'moment';
+import * as session from 'express-session';
 import cbFunc from '../cb/cb';
 import basic from '../db/basic';
+
+
 
 export class User {
   private _req: any;
@@ -17,6 +20,9 @@ export class User {
     const sql = 'SELECT * FROM user WHERE email = \'' + data.email + '\';';
     const results = await new Promise((resolve, reject) => {
       con.query(sql, (err: any, result: any) => {
+        if (err) {
+          return reject(err);
+        }
         resolve(result);
       });
     });
@@ -35,7 +41,7 @@ export class User {
         '\',\'' +
         data.email +
         '\',\'' +
-        data.password +
+        hashPwd +
         '\',\'' +
         dateTime +
         '\');';
@@ -44,8 +50,39 @@ export class User {
           resolve(result);
         });
         con.end();
+        res.send('ok');
       });
-      res.send('ok');
+
+    }
+  }
+
+  public async login(req: any, res: any) {
+    const data = req.body;
+    const con = await basic('cloud');
+    const sql =
+      'SELECT id,password FROM user WHERE email = \'' + data.email + '\';';
+    const results = await new Promise((resolve, reject) => {
+      con.query(sql, (err: any, result: any) => {
+        resolve(result);
+      });
+    });
+    if (results.length === 1) {
+      const hash = crypto.createHash('sha256');
+      hash.update(data.password);
+      const hashPwd = hash.digest('hex');
+
+      if (hashPwd === results[0].password) {
+        console.log(results[0].id);
+
+        req.session.userid = results[0].id;
+
+        console.log(req.session.userid);
+
+        res.send('ok');
+        con.end();
+      } else {
+        return;
+      }
     }
   }
 }

@@ -9,7 +9,7 @@ $(function () {
   var check = [false, false, false];
 
 
-  //校验成功函数  符合注册要求
+  //校验成功函数 符合注册要求
   function success(Obj, counter) {
     Obj.parent().parent().removeClass('has-error').addClass('has-success');
     $('.tip').eq(counter).text("");
@@ -63,8 +63,6 @@ $(function () {
     }
   });
 
-
-
   $('#sub').on('click', function () {
     var flag = 0;
     for (var i = 0; i < check.length; i++) {
@@ -72,37 +70,35 @@ $(function () {
         flag++;
       }
     }
-    if (flag == 3) {
+    if (flag === 2) {
       $.ajax({
         type: 'post',
         url: "/api/users",
         data: {
           'email': $('#emal').val(),
           'password': $('#pwd').val(),
-          'pwd2': $('#pwd2').val(),
-          'action': 'register'
+          'action': 'login'
         },
-        async: false,
+        async:false,
         error: function (error) {
           // console.log(error);
           alert('服务器访问错误！');
-          location.href = ("/user/register");
+          location.href = ("/user/login");
         },
         success: function (data) {
           alert(data);
-          if (data === "ok") {
-            alert('2'+data);
-
-            location.href = ("/user/login");
+          if (!isNaN(data)) {
+            location.href = ("/user/" + data);
           } else {
-            location.href = ("/user/register");
+            alert('服务器访问错误！');
+            location.href = ("/user/login");
           }
         }
       })
     } else {
-      location.href = ("/user/register");
+      alert('服务器访问错误！');
+      location.href = ("/user/login");
       return;
     }
   });
-
 });
