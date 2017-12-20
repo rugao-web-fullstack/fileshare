@@ -1,9 +1,9 @@
-// import * as Express from 'express';
-// import * as multer from 'multer';
-// import cb from '../../cb/cb';
-// // import { File } from '../../operations/file';
-// const router = Express.Router();
-// const upload = multer({ dest: './__tests__/file' });
+import * as Express from 'express';
+import * as multer from 'multer';
+import cb from '../../cb/cb';
+import { File } from '../../operations/file';
+const router = Express.Router();
+const upload = multer({ dest: './__tests__/file' });
 
 // // 文件操作
 // router.post('/', upload, (req: any, res: any) => {
@@ -19,4 +19,9 @@
 //   }
 // });
 
-// export default router;
+router.get('/', async (req: any, res: any) => {
+  const userfiles = new File();
+  await userfiles.getFiles(req, res);
+});
+
+export default router;
