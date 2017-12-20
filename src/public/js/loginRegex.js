@@ -53,23 +53,17 @@ $(function () {
       }
     }
   });
-  //确认密码
-  // 再次输入密码校验
-  $('.container').find('input').eq(2).change(function () {
-    if ($(this).val() == password) {
-      success($(this), 2);
-    } else {
-      fail($(this), 2, '两次输入的密码不一致');
-    }
-  });
 
   $('#sub').on('click', function () {
+
     var flag = 0;
     for (var i = 0; i < check.length; i++) {
       if (check[i] == true) {
         flag++;
       }
     }
+
+    alert(flag);
     if (flag === 2) {
       $.ajax({
         type: 'post',
@@ -79,16 +73,19 @@ $(function () {
           'password': $('#pwd').val(),
           'action': 'login'
         },
-        async:false,
+        async: false,
         error: function (error) {
           // console.log(error);
           alert('服务器访问错误！');
           location.href = ("/user/login");
         },
         success: function (data) {
-          alert(data);
-          if (!isNaN(data)) {
-            location.href = ("/user/" + data);
+          alert('------'+data);
+          // if (!isNaN(data)) {
+          if (data == "ok") {
+            // location.href = ("/user/" + data);
+            location.href = ("/user/register");
+
           } else {
             alert('服务器访问错误！');
             location.href = ("/user/login");

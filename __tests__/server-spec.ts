@@ -77,7 +77,6 @@ test('url-login', done => {
   request(app)
     .get('/user/login')
     .expect(200, function(err, res) {
-      console.log(err);
       expect(err).toBeFalsy();
       expect(res.text.includes('登录')).toBeTruthy();
       done();
@@ -162,6 +161,42 @@ test('api-register', done => {
       done();
     });
 });
+
+test('api-login', done => {
+  request(app)
+    .post('/api/users')
+    .type('form')
+    .send({
+      action: 'login',
+      email: 'p@qq.com',
+      password: '11111111q',
+    })
+    .expect(200, function(err, res) {
+      expect(err).toBeFalsy();
+      expect(res.text.includes('ok')).toBeTruthy();
+      console.log(res.text + '--------');
+      done();
+    });
+});
+
+test('登录失败', done => {
+  request(app)
+    .post('/api/users')
+    .type('form')
+    .send({
+      action: 'login',
+      email: '111@163.com',
+      password: 'q1q',
+    })
+    .expect(200, function(err, res) {
+      expect(err).toBeFalsy();
+      console.log(err);
+      expect(res.text.includes('error')).toBeTruthy();
+      console.log(res.text);
+      done();
+    });
+});
+
 test('default', done => {
   request(app)
     .post('/api/users')
