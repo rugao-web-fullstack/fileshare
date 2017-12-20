@@ -76,12 +76,12 @@ test('测试数据库链接', done => {
       var data = [
         ['t1', 'video', 3, 100, '111'],
         ['t2', 'video', 3, 100, '120'],
-        ['t3', 'audio', 3, 90, '111'],
-        ['t4', 'audio', 3, 110, '120'],
+        ['t3', 'zip', 3, 90, '111'],
+        ['t4', 'zip', 3, 110, '120'],
         ['t5', 'image', 3, 20, '111'],
         ['t6', 'image', 3, 50, '120'],
-        ['t7', 'article', 3, 70, '111'],
-        ['t8', 'article', 3, 122, '120'],
+        ['t7', 'doc', 3, 70, '111'],
+        ['t8', 'doc', 3, 122, '120'],
       ];
       con.query(
         'insert into `file` ( `filename`, `type`, `size`, `downloads`, `hash`) values ?',
@@ -143,7 +143,7 @@ test('/hot/video读取测试', done => {
       done();
     });
 });
-test('/hot/audio读取测试', done => {
+test('/hot/zip读取测试', done => {
   request(app)
     .get('/files/hot/audio')
     .expect(200, function(err, res) {
@@ -161,7 +161,7 @@ test('/hot/image读取测试', done => {
       done();
     });
 });
-test('/hot/article读取测试', done => {
+test('/hot/doc读取测试', done => {
   request(app)
     .get('/files/hot/article')
     .expect(200, function(err, res) {
