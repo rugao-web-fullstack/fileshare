@@ -2,7 +2,7 @@ import * as Express from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import queryFile from '../../db/queryFile';
-// import { File } from '../../operations/file';
+import { File } from '../../operations/file';
 const router = Express.Router();
 
 // router.get('/download', (req: any, res: any) => {
