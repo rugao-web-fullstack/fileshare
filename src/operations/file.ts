@@ -59,12 +59,9 @@ export class File {
   }
 
   public async getFiles(req: any, res: any) {
-    console.log('aaa');
     const con = await db('cloud');
     const sql = 'select * from file where type = \'' + req.query.type + '\';';
-    console.log('bbb');
     const result = await query(sql, con);
-    console.log('ccc');
     res.json(result);
   }
 
