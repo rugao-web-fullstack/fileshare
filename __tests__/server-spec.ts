@@ -150,7 +150,7 @@ test('测试数据库链接', done => {
       expect(err).toBeFalsy();
       console.log('success user');
       con.query(
-        "INSERT INTO user(username, password, email, created_at) VALUES ('user1','123','user1.qq','2017-10-20')",
+        "INSERT INTO user(username, password, email, created_at) VALUES ('user1','123','user1.qq','2017-12-11 12:25:25')",
         function(err) {
           expect(err).toBeFalsy();
           console.log('insert success');
@@ -232,12 +232,12 @@ test('default', done => {
     });
 });
 
-test('测试用户所有获取', done => {
+test('测试用户分页获取', done => {
   request(app)
-    .get('/api/admins/users')
+    .get('/api/admins/users?page=0')
     .expect(200, function(err, res) {
       expect(err).toBeFalsy();
-      expect(res.body[0].username === 'user1').toBeTruthy();
+      expect(res.body.pages === 1).toBeTruthy();
       done();
     });
 });
@@ -450,6 +450,7 @@ beforeAll(function(done) {
     password: process.env.MYSQL_PASSWORD,
   });
   con.query('DROP DATABASE IF EXISTS cloud;', function(err) {
+    console.log('zheli');
     expect(err).toBeFalsy();
     // 断开
     con.end();
