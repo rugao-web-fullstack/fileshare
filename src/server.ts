@@ -2,8 +2,13 @@ import * as bodyParser from 'body-parser';
 import * as Express from 'express';
 import * as nunjucks from 'nunjucks';
 import * as path from 'path';
+<<<<<<< HEAD
+import api_admin from './routes/api/admin';
+import file from './routes/api/file';
+=======
 import apiAdmin from './routes/api/admin';
 import files from './routes/api/file';
+>>>>>>> 83a1e216cc475985d038bb3e718a54119433a43f
 import hot from './routes/api/hot';
 import apiUser from './routes/api/user';
 import admin from './routes/url/admin';
@@ -42,9 +47,15 @@ export class Server {
   public initRouters(app: Express) {
     app.use('/user', user);
     app.use('/admin', admin);
+<<<<<<< HEAD
+    app.use('/api/admin', api_admin);
+    app.use('/api/files', file);
+    app.use('/api/users', users);
+=======
     app.use('/api/admins', apiAdmin);
     app.use('/api/files', files);
     app.use('/api/users', apiUser);
+>>>>>>> 83a1e216cc475985d038bb3e718a54119433a43f
     app.use('/', main);
   }
 }
