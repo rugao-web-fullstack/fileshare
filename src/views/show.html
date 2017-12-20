@@ -74,8 +74,24 @@
 <script src="https://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src='https://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
 <script>
+    var URL = window.location.pathname;
+    console.log(URL);
+    switch(URL){
+	case "/hots/video":
+		URL="/files/hot/video";
+		break;
+	case "/hots/audio":
+		URL="/files/hot/audio";
+		break;
+	case "/hots/image":
+		URL="/files/hot/image";
+		break;
+	case "/hots/article":
+		URL="/files/hot/article";
+		break;
+	}
     $.ajax({
-            url: "/api/hot/video",
+            url: URL,
             type: "get",
             success: function (data, status) {
                 console.log(data);

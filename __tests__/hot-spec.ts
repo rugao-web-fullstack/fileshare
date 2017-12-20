@@ -39,6 +39,12 @@ test('测试数据库链接', done => {
       var data = [
         ['user1', '123', 'user1.qq', '2017-10-20'],
         ['user2', '123', 'user1.qq', '2017-10-20'],
+        ['user3', '123', 'user1.qq', '2017-10-20'],
+        ['user4', '123', 'user1.qq', '2017-10-20'],
+        ['user5', '123', 'user1.qq', '2017-10-20'],
+        ['user6', '123', 'user1.qq', '2017-10-20'],
+        ['user7', '123', 'user1.qq', '2017-10-20'],
+        ['user8', '123', 'user1.qq', '2017-10-20'],
       ];
       con.query(
         'INSERT INTO user(username, password, email, created_at) VALUES ?',
@@ -70,6 +76,12 @@ test('测试数据库链接', done => {
       var data = [
         ['t1', 'video', 3, 100, '111'],
         ['t2', 'video', 3, 100, '120'],
+        ['t3', 'zip', 3, 90, '111'],
+        ['t4', 'zip', 3, 110, '120'],
+        ['t5', 'image', 3, 20, '111'],
+        ['t6', 'image', 3, 50, '120'],
+        ['t7', 'doc', 3, 70, '111'],
+        ['t8', 'doc', 3, 122, '120'],
       ];
       con.query(
         'insert into `file` ( `filename`, `type`, `size`, `downloads`, `hash`) values ?',
@@ -98,7 +110,16 @@ test('测试数据库链接', done => {
     function(err) {
       expect(err).toBeFalsy();
       console.log('success user_file');
-      var data = [[1, 1, '2017-12-07 00:00:00'], [2, 2, '2017-12-07 00:00:00']];
+      var data = [
+        [1, 1, '2017-12-07 00:00:00'],
+        [2, 2, '2017-12-07 00:00:00'],
+        [3, 3, '2017-12-07 00:00:00'],
+        [4, 4, '2017-12-07 00:00:00'],
+        [5, 5, '2017-12-07 00:00:00'],
+        [6, 6, '2017-12-07 00:00:00'],
+        [7, 7, '2017-12-07 00:00:00'],
+        [8, 8, '2017-12-07 00:00:00'],
+      ];
       con.query(
         'INSERT INTO `user_file` (`user`, `file`, `uploaded_at`) values ?',
         [data],
@@ -115,10 +136,37 @@ test('测试数据库链接', done => {
 
 test('/hot/video读取测试', done => {
   request(app)
-    .get('/api/hot/video')
+    .get('/files/hot/video')
     .expect(200, function(err, res) {
       expect(err).toBeFalsy();
       expect(res.body[0].username === 'user1').toBeTruthy();
+      done();
+    });
+});
+test('/hot/zip读取测试', done => {
+  request(app)
+    .get('/files/hot/audio')
+    .expect(200, function(err, res) {
+      expect(err).toBeFalsy();
+      expect(res.body[0].username === 'user4').toBeTruthy();
+      done();
+    });
+});
+test('/hot/image读取测试', done => {
+  request(app)
+    .get('/files/hot/image')
+    .expect(200, function(err, res) {
+      expect(err).toBeFalsy();
+      expect(res.body[0].username === 'user6').toBeTruthy();
+      done();
+    });
+});
+test('/hot/doc读取测试', done => {
+  request(app)
+    .get('/files/hot/article')
+    .expect(200, function(err, res) {
+      expect(err).toBeFalsy();
+      expect(res.body[0].username === 'user8').toBeTruthy();
       done();
     });
 });
