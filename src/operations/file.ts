@@ -2,7 +2,7 @@ import * as Express from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
-import cbFunc from '../cb/cb';
+// import cbFunc from '../cb/cb';
 import db from '../db/basic';
 import query from '../db/query';
 import queryFile from '../db/queryFile';
