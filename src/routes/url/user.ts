@@ -1,21 +1,22 @@
 import * as Express from 'express';
+import { error } from 'util';
+import { User } from '../../operations/user';
+const user = new User();
+
 const router = Express.Router();
-router.get('/register', (req: any, res: any) => {
-  res.render('user/register');
-});
-router.get('/login', (req: any, res: any) => {
-  res.render('user/login');
-});
-
-router.get('/info', (req: any, res: any) => {
-  res.render('user/info');
-});
-
-router.get('/:id', (req: any, res: any) => {
-  if (!isNaN(req.params.id)) {
-    res.render('user/user');
-  } else {
-    res.send('404');
+router.post('/', async (req: any, res: any) => {
+  switch (req.body.action) {
+    case 'register':
+      const data = req.body;
+      const id = await user.register(data);
+      if (!id) {
+        res.send('false');
+        return;
+      }
+      res.send('ok');
+      break;
+    default:
+      res.send('error');
   }
 });
 
