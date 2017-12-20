@@ -128,12 +128,14 @@ test('测试数据库创建', done => {
     user: process.env.MYSQL_USERNAME,
     password: process.env.MYSQL_PASSWORD,
   });
-
-  con.query('CREATE DATABASE cloud character set utf8', function(err) {
+  con.query('DROP DATABASE  IF EXISTS cloud;', function(err) {
     expect(err).toBeFalsy();
-    // 断开
-    con.end();
-    done();
+    con.query('CREATE DATABASE cloud character set utf8', function(err) {
+      expect(err).toBeFalsy();
+      // 断开
+      con.end();
+      done();
+    });
   });
 });
 
@@ -254,7 +256,14 @@ test('测试用户删除', done => {
 
 test('cb错误测试覆盖', done => {
   let func = cbFunc(() => {});
-  expect(func(new Error('222'), '0') === undefined).toBeTruthy();
+  let entered = false;
+  try {
+    func(new Error('222'), '0');
+  } catch (e) {
+    expect(e.message === '222').toBeTruthy();
+    entered = true;
+  }
+  expect(entered).toBeTruthy();
   done();
 });
 
@@ -279,7 +288,7 @@ test('创建待审文件表', done => {
 
 test('测试.txt文件上传成功', done => {
   request(app)
-    .post('/files')
+    .post('/api/files')
     .type('form')
     .field('action', 'upload')
     .attach('_upload', '__tests__/fixtures/1.txt')
@@ -291,7 +300,7 @@ test('测试.txt文件上传成功', done => {
 });
 test('测试.jpg文件上传成功', done => {
   request(app)
-    .post('/files')
+    .post('/api/files')
     .type('form')
     .field('action', 'upload')
     .attach('_upload', '__tests__/fixtures/1.jpg')
@@ -303,7 +312,7 @@ test('测试.jpg文件上传成功', done => {
 });
 test('测试.avi文件上传成功', done => {
   request(app)
-    .post('/files')
+    .post('/api/files')
     .type('form')
     .field('action', 'upload')
     .attach('_upload', '__tests__/fixtures/1.avi')
@@ -315,7 +324,7 @@ test('测试.avi文件上传成功', done => {
 });
 test('测试.zip文件上传成功', done => {
   request(app)
-    .post('/files')
+    .post('/api/files')
     .type('form')
     .field('action', 'upload')
     .attach('_upload', '__tests__/fixtures/1.zip')
@@ -327,7 +336,7 @@ test('测试.zip文件上传成功', done => {
 });
 test('测试.md文件上传成功', done => {
   request(app)
-    .post('/files')
+    .post('/api/files')
     .type('form')
     .field('action', 'upload')
     .attach('_upload', '__tests__/fixtures/1.md')
@@ -337,7 +346,6 @@ test('测试.md文件上传成功', done => {
       done();
     });
 });
-
 
 test('创建文件表', done => {
   var con = mysql.createConnection({
@@ -352,15 +360,22 @@ test('创建文件表', done => {
     function(err) {
       expect(err).toBeFalsy();
       console.log('success file');
-      const sql =
-        "INSERT INTO file(filename,type,size, downloads, hash) VALUES ('111','zip','111','111','111')";
-      //插入一些数据
-      con.query(sql, function(err) {
-        expect(err).toBeFalsy();
-        console.log('success file');
-        con.end();
-        done();
-      });
+      con.query(
+        "INSERT INTO file(filename,type,size, downloads, hash) VALUES ('111','zip','111','111','111')",
+        function(err) {
+          expect(err).toBeFalsy();
+          console.log('success into');
+          con.query(
+            "INSERT INTO  file(filename, type, size, downloads,hash) values ('girl.JPG','image','40','2','asgsagasgasdaasg');",
+            function(err) {
+              expect(err).toBeFalsy();
+              console.log('insert into');
+              con.end();
+              done();
+            }
+          );
+        }
+      );
     }
   );
 });
@@ -370,11 +385,47 @@ test('测试获取分类文件', done => {
     .get('/api/files?type=zip')
     .expect(200, function(err, res) {
       expect(err).toBeFalsy();
+      console.log(err);
+      console.log(res.body);
       expect(res.body).toBeTruthy();
       done();
     });
 });
 
+test('测试download----', done => {
+  request(app)
+    .get('/user/download?id=1')
+    .expect(200, function(err, res) {
+      done();
+    });
+});
+
+test('测试download----fail', done => {
+  let app = Express();
+  let server = new Server(app, 3000);
+  var con = mysql.createConnection({
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USERNAME,
+    password: process.env.MYSQL_PASSWORD,
+    database: 'cloud',
+  });
+  con.query(
+    "insert into file(filename, type, size, downloads,hash) values ('girlTest.JPG','image',40,2,'asgsagasgasdaasg');",
+    function(err) {
+      expect(err).toBeFalsy();
+      console.log('insert success');
+      con.end();
+      done();
+    }
+  );
+  request(app)
+    .get('/user/download?id=2')
+    .expect(200, function(err, res) {
+      if (err) throw err;
+      expect(res.text.includes('not')).toBeTruthy();
+      done();
+    });
+});
 
 beforeAll(function(done) {
   var con = mysql.createConnection({
@@ -382,7 +433,7 @@ beforeAll(function(done) {
     user: process.env.MYSQL_USERNAME,
     password: process.env.MYSQL_PASSWORD,
   });
-  con.query('DROP DATABASE IF EXISTS cloud;', function(err) {
+  con.query('DROP DATABASE  IF EXISTS cloud;', function(err) {
     expect(err).toBeFalsy();
     // 断开
     con.end();

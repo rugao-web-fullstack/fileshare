@@ -1,5 +1,11 @@
+import * as Express from 'express';
+import * as fs from 'fs';
+import * as path from 'path';
+import { promisify } from 'util';
+import cbFunc from '../cb/cb';
 import db from '../db/basic';
 import query from '../db/query';
+import queryFile from '../db/queryFile';
 
 export class File {
   private filename: string;
@@ -53,10 +59,33 @@ export class File {
   }
 
   public async getFiles(req: any, res: any) {
+    console.log('aaa');
     const con = await db('cloud');
     const sql = 'select * from file where type = \'' + req.query.type + '\';';
+    console.log('bbb');
     const result = await query(sql, con);
-    console.log(result);
+    console.log('ccc');
     res.json(result);
+  }
+
+  public download(res: any) {
+    const fsexists = promisify(fs.exists);
+    // ------------------等其他两组提交后再将file改成变量
+    const currFile = path.resolve('file/', this.filename);
+    fsexists(currFile).then((exist: any) => {
+      if (exist) {
+        const f = fs.createReadStream(currFile);
+        res.writeHead(200, {
+          'Content-Disposition':
+            'attachment; filename=' + encodeURI(this.filename),
+          'Content-Type': 'application/force-download',
+        });
+        f.pipe(res);
+      } else {
+        res.set('Content-type', 'text/html');
+        res.send('file not exist!');
+        res.end();
+      }
+    });
   }
 }

@@ -4,6 +4,7 @@ import * as nunjucks from 'nunjucks';
 import * as path from 'path';
 import api_admin from './routes/api/admin';
 import file from './routes/api/file';
+import hot from './routes/api/hot';
 import users from './routes/api/users';
 import admin from './routes/url/admin';
 import hots from './routes/url/hots';
