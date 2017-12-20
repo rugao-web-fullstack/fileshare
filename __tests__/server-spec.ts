@@ -198,19 +198,19 @@ test('default', done => {
     });
 });
 
-test('测试用户所有获取', done => {
+test('测试用户分页获取', done => {
   request(app)
-    .get('/api/admin/users')
+    .get('/api/admins/users?page=0')
     .expect(200, function(err, res) {
       expect(err).toBeFalsy();
-      expect(res.body[0].username === 'user1').toBeTruthy();
+      expect(res.body.Res.length === 2).toBeTruthy();
       done();
     });
 });
 
 test('测试单用户查询', done => {
   request(app)
-    .get('/api/admin/users/user1')
+    .get('/api/admins/users/user1')
     .expect(200, function(err, res) {
       expect(err).toBeFalsy();
       expect(res.body[0].id === 1).toBeTruthy();
@@ -220,7 +220,7 @@ test('测试单用户查询', done => {
 
 test('测试单用户查询结果无此用户', done => {
   request(app)
-    .get('/api/admin/users/user15')
+    .get('/api/admins/users/user15')
     .expect(200, function(err, res) {
       expect(err).toBeFalsy();
       expect(res.body === 'none').toBeTruthy();
@@ -230,7 +230,7 @@ test('测试单用户查询结果无此用户', done => {
 
 test('测试用户密码重置', done => {
   request(app)
-    .post('/api/admin/users')
+    .post('/api/admins/users')
     .type('form')
     .send({ action: 'reset', id: 1 })
     .expect(200, function(err, res) {
@@ -242,7 +242,7 @@ test('测试用户密码重置', done => {
 
 test('测试用户删除', done => {
   request(app)
-    .post('/api/admin/users')
+    .post('/api/admins/users')
     .type('form')
     .send({ action: 'delete', id: 1 })
     .expect(200, function(err, res) {
@@ -296,6 +296,7 @@ test('测试.txt文件上传成功', done => {
       done();
     });
 });
+
 test('测试.jpg文件上传成功', done => {
   request(app)
     .post('/files')
@@ -308,6 +309,7 @@ test('测试.jpg文件上传成功', done => {
       done();
     });
 });
+
 test('测试.avi文件上传成功', done => {
   request(app)
     .post('/files')
@@ -320,6 +322,7 @@ test('测试.avi文件上传成功', done => {
       done();
     });
 });
+
 test('测试.zip文件上传成功', done => {
   request(app)
     .post('/files')
@@ -332,6 +335,7 @@ test('测试.zip文件上传成功', done => {
       done();
     });
 });
+
 test('测试.md文件上传成功', done => {
   request(app)
     .post('/files')
@@ -415,6 +419,7 @@ beforeAll(function(done) {
     password: process.env.MYSQL_PASSWORD,
   });
   con.query('DROP DATABASE IF EXISTS cloud;', function(err) {
+    console.log('zheli');
     expect(err).toBeFalsy();
     // 断开
     con.end();
